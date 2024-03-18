@@ -3,10 +3,24 @@
  */
 package springworkspace;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
+// @NoArgsConstructor // 아무것도 없는 빈 생성자 만들어짐 -> main의 기본생성자 사용 가능
+@AllArgsConstructor // 생성자 자동 생성 -> main의 기본생성자는 사용할 수 없음
+@RequiredArgsConstructor // final로 생성된 변수만 생성자 만들어짐?
+@Builder
 class Person {
+    
+    private final String name;
+    private int age;
+    // final로 지정하면 초기화가 반드시 이루어져야 하기때문에 @NoArgsConstructor 에러
 
 }
 
@@ -17,5 +31,11 @@ public class App {
 
     public static void main(String[] args) {
         System.out.println(new App().getGreeting());
+
+        // 홍길동, 20만 치면 자동완성으로 name, age 추가됨 / name, age도 직접치면 에러뜸
+        Person person = new Person("홍길동", 20);
+        person = new Person("고길동");
+        person = Person.builder().name("홍길동").age(20).build();
+        
     }
 }
