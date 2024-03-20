@@ -17,11 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 // @RestController : JSON 형태의 Response Body를 반환하는 Controller 임을 명시
 // @RestController = @Controller + @ResponseBody
 @RestController
+
 // @RequestMapping() : HTTP 요청에 클래스와 메서드를 매핑하기 위한 어노테이션
 // @RequestMapping(value = "/main", method = {RequestMethod.GET})
+
 // HTTP GET localhost:4000/main/**
 @RequestMapping("/main")
-public class BasicController {
+public class BasicController1 {
     
     // HTTP GET localhost:4000/main/
     @RequestMapping(value = "/", method = {RequestMethod.GET})
@@ -29,6 +31,7 @@ public class BasicController {
         return "Hello Sprinboot!!";
     }
 
+    // 위에 코드는 가독성 낮고 길어서 밑에 코드들을 사용
 
     // HTTP GET Method : 클라이언트가 서버로부터 데이터를 받기를 원할 때 사용하는 메서드
     // @GetMapping() : RequestMapping 기능을 GET Mathod에 한정시킨 것 (가독성 + 안정성)
@@ -67,10 +70,10 @@ public class BasicController {
     }
 
     // Method + URL Pattern이 중복되면 런타임 중에 에러가 발생
-    @DeleteMapping("/apple")
-    public String deleteApple1() {
-        return "Delete Mapping으로 만든 메서드";
-    }
+    // @DeleteMapping("/apple")
+    // public String deleteApple1() {
+    //     return "Delete Mapping으로 만든 메서드";
+    // }
 
 
 }
