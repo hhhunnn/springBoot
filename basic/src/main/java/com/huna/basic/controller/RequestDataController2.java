@@ -35,8 +35,8 @@ public class RequestDataController2 {
         return "사용자 아이디: " + userId + " / 사용자 이름 : " + userName + " / 사용자 나이 : " + userAge;
     }
 
-    // @PathVariable() : 
-    // 모든 HTTP 메서드에서 URL의 특정 패턴에 따라서 데이터를 추출하는 방식
+    // @PathVariable() :  
+    // 모든 HTTP 메서드에서 URL의 특정 패턴에 따라서 데이터를 추출하는 방식 (-> 많이 사용)
 
     // HTTP DELETE localhost:4000/request-data/path-variable
     // int로 작성할 경우 0이 들어오게 되는데 사용자가 0을 입력한 것인지 기본값이 들어온 건지 알 수 없게 됨
