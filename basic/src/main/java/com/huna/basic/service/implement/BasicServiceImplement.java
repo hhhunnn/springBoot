@@ -39,4 +39,9 @@ public class BasicServiceImplement implements BasicService {
         
         return jwtProvider.create(priciple);
     }
+
+    @Override
+    public String jwtValidate(String jwt) {
+        return jwtProvider.validation(jwt);
+    }
 }
