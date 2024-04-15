@@ -1,10 +1,16 @@
 package com.huna.basic.filter;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Collection;
+import java.util.ArrayList;
+
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -48,14 +54,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            
+            // 접근 주체에 대한 권한 지정
+            List<GrantedAuthority> roles = AuthorityUtils.NO_AUTHORITIES;
+            if (subject.equals("student")) {
+                roles = new ArrayList<>();
+            } roles.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
 
             // 3. principle의 대한 정보를 controller로 전달하기 위해 contenxt에 담기
 
             // 3-1. 인증된 사용자라는 의미의 UsernamePasswordAuthenticationToken 객체를 생성
             // (사용자의 이름, 비밀번호, 사용자 권한)
             AbstractAuthenticationToken authenticationToken 
-                = new UsernamePasswordAuthenticationToken(subject, null, AuthorityUtils.NO_AUTHORITIES);
+                = new UsernamePasswordAuthenticationToken(subject, null, roles);
 
             // 3-2. 인증 요청에 대한 세부정보를 등록 / 웹 인증 정보를 해당 리퀘스트에 등록
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
