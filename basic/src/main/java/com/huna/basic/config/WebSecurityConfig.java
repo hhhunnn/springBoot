@@ -5,8 +5,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import com.huna.basic.filter.JwtAuthenticationFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 // @Configurable :
@@ -15,7 +25,10 @@ import org.springframework.security.web.SecurityFilterChain;
 // @EnableWebSecurity : 
 // - Web Security 설정을 지원하도록 하는 어노테이션
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     // @Bean :
     // - Spring bean으로 등록하는 어노테이션, 인스턴스 생성X?, 클래스,메서드 다 사용가능한거임(메서드에서만 사용X)
@@ -29,7 +42,55 @@ public class WebSecurityConfig {
         // httpBasic이 메서드를원함 -> 클래스::disable이라는 매서드를 전달
         security
         // httpBasic : basic authentication 미사용
-        .httpBasic(HttpBasicConfigurer::disable);
+        .httpBasic(HttpBasicConfigurer::disable)
+        // session : 
+        // - 웹 애플리케이션에서 사용자에 대한 정보 및 상태를 유지하기 위한 기술
+        // - 서버측에서 사용자 정보 및 상태를 저장하는 방법
+        // - REST API 서버에서는 사용자 정보 및 상태를 클라이언트가 유지하기 때문에 session을 생성하지 않음 (밑의 코드)
+        // cookie :
+        // - 웹 애플리케이션에서 사용자에 대한 정보 및 상태를 유지하기 위한 기술
+        // - 클라이언트측에서 사용자 정보 및 상태를 저장하는 방법
+        // session과 cookie의 차이
+        // - 저장위치 : cookie는 클라이언트(f12로 볼수 있ㅇ므), session은 서버(볼 수 없음)
+        // - 보안 : session이 보안 수준이 높음
+        // - 수명 : cookie는 지정한 기간동안 지속적으로 유지, session은 연결이 끊기면 파기됨
+        // - 용도 : cookie에는 간단한 데이터(id)를 저장, session에는 민감한 데이터(개인정보)를 저장
+
+        // cache :
+        // - 데이터나 값을 미리 복사해두고 저장하는 임시 공간
+        // - 사용자의 접근을 조금 더 빠르게 할 수 있도록 함
+        // - 시스템 성능 향상
+        // - 하드웨어 캐시 : cpu cache, disk cache
+        // - 소프트웨어 캐시 : web cache, database cache
+        // - 네트워크 캐시 : CDN  
+        .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        // CSRF (Cross-Site Request Forgery) : 
+        // - 클라이언트(사용자)가 자신의 의도와는 무관한 공격행위를 하는 것
+        // SQL Injection :
+        // - 공격자가 데이터베이스의 쿼리문을 직접 조작하여 데이터를 탈취하는 공격
+        // XSS (Cross-Site Scripting) :
+        // - 공격자가 웹 브라우저에 악성 스크립트를 작성하여 실행시키는 공격
+        .csrf(CsrfConfigurer::disable)
+        // Spring Security 사용 이후에는 CORS 정책을 Security Filter Chain에 등록
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+
+        // 우리가 생성한 jwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 이전에 등록
+        security.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return security.build();
+    }
+
+    @Bean
+    protected CorsConfigurationSource corsConfigurationSource() {
+
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
+
     }
 }
