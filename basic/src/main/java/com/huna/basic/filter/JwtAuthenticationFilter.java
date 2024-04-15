@@ -48,6 +48,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
+            
+
             // 3. principle의 대한 정보를 controller로 전달하기 위해 contenxt에 담기
 
             // 3-1. 인증된 사용자라는 의미의 UsernamePasswordAuthenticationToken 객체를 생성

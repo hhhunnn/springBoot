@@ -3,6 +3,7 @@ package com.huna.basic.config;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -72,7 +73,20 @@ public class WebSecurityConfig {
         // - 공격자가 웹 브라우저에 악성 스크립트를 작성하여 실행시키는 공격
         .csrf(CsrfConfigurer::disable)
         // Spring Security 사용 이후에는 CORS 정책을 Security Filter Chain에 등록
-        .cors(cors -> cors.configurationSource(corsConfigurationSource()));
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        // 요청 URL의 패턴에 따라 리소스 접근 허용 범위를 지정
+        // 인증되지 않은 사용자도 접근을 허용
+        // 인증된 사용자 중 특정 권한을 가지고 있는 사용자만 접근을 허용
+        // 인증된 사용자는 모두 접근을 허용
+        .authorizeHttpRequests(request -> request
+            // 특정 URL 패턴에 대한 요청은 인증되지 않은 사용자도 접근을 허용
+            // HttpMethod.GET : GET에 대해 허용?
+            .requestMatchers(HttpMethod.GET,"auth/*").permitAll()
+            // 특정 URL 패턴에 대한 요청은 지정한 권한을 가지고 있는 사용자만 접근을 허용
+            .requestMatchers("/student/**").hasRole("STUDENT")
+            // 인증된 사용자는 모두 접근을 허용
+            .anyRequest().authenticated()
+        );
 
         // 우리가 생성한 jwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 이전에 등록
         security.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
