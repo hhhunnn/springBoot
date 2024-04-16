@@ -1,4 +1,4 @@
-package com.huna.basic.dto.Request.Student;
+package com.huna.basic.dto.request.student;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -23,4 +23,7 @@ public class PostStudentRequestDto {
     
     @NotNull
     private Boolean graduation;
+
+    @NotNull
+    private String password;
 }

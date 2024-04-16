@@ -1,6 +1,6 @@
 package com.huna.basic.entity;
 
-import com.huna.basic.dto.Request.Student.PostStudentRequestDto;
+import com.huna.basic.dto.request.student.PostStudentRequestDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -56,11 +56,13 @@ public class StudentEntity {
     private Integer age;
     private String address;
     private Boolean graduation;
+    private String password;
 
     public StudentEntity(PostStudentRequestDto dto) {
         this.name = dto.getName();
         this.age = dto.getAge();
         this.address = dto.getAddress();
         this.graduation = dto.getGraduation();
+        this.password = dto.getPassword();
     }
 }

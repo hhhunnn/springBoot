@@ -9,9 +9,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class PatchStudentRequestDto {
+public class SignInRequestDto {
     @NotNull
     private Integer studentNumber;
+
     @NotBlank
-    private String address;
+    private String password;
 }
