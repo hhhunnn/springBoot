@@ -58,7 +58,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             List<GrantedAuthority> roles = AuthorityUtils.NO_AUTHORITIES;
             if (subject.equals("student")) {
                 roles = new ArrayList<>();
-            } roles.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
+                roles.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
+            } 
 
             // 3. principle의 대한 정보를 controller로 전달하기 위해 contenxt에 담기
 

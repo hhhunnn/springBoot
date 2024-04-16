@@ -7,6 +7,7 @@ import com.huna.basic.service.BasicService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,14 @@ public class AuthController {
     ) {
         return basicService.jwtValidate(jwt);
     }
+
+    @GetMapping("/authentication/principle")
+    public String authenticationPriciple (
+        @AuthenticationPrincipal String username
+    ) {
+        return "접근 주체 : " + username;
+    }
+    
 
 
 }
